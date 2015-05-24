@@ -28,12 +28,14 @@ public class BoardPanel extends JPanel {
 	}
 	public void setPlayer1(ComputerPlayr player1) {
 		this.player1 = player1;
+		updateListener();
 	}
 	public ComputerPlayr getPlayer2() {
 		return player2;
 	}
 	public void setPlayer2(ComputerPlayr player2) {
 		this.player2 = player2;
+		updateListener();
 	}
 	public Board getBoard() {
 		return board;
@@ -83,23 +85,25 @@ public class BoardPanel extends JPanel {
 			}
 		}
 	}
-	public static void main(String[] args) {
-		
-		JFrame tmp=new JFrame();
-		tmp.setVisible(true);
-		JPanel contentPane = new BoardPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		tmp.setContentPane(contentPane);
-		tmp.setSize(500, 500);
-	}
+	
 	public BoardPanel(Board b,ComputerPlayr player1,ComputerPlayr player2) {
 		board=b;
 		if(player1!=null)
 			currHumenPlayer=SquareState.empty;
 		this.player1=player1;
 		this.player2=player2;
-		addMouseMotionListener(new MouseMotionListener() {
+		updateListener();
+	}
+	
+	private void updateListener(){
+		for (MouseMotionListener motionListener : getMouseMotionListeners()) {
+			removeMouseMotionListener(motionListener);
+		}
+		for (MouseListener mouseListener : getMouseListeners()) {
+			removeMouseListener(mouseListener);
+		}
+		if(player1==null||player2==null)
+addMouseMotionListener(new MouseMotionListener() {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
@@ -121,6 +125,7 @@ public class BoardPanel extends JPanel {
 			public void mouseDragged(MouseEvent e) {}
 		});
 		
+			
 		addMouseListener(new MouseListener() {
 			
 			@Override
@@ -148,8 +153,10 @@ public class BoardPanel extends JPanel {
 				}
 				if(player1!=null)
 					BoardPanel.this.board.makeMove(player1.computeMove(BoardPanel.this.board));
-				if(player2!=null &&(flag||player1!=null))
+				if(player2!=null &&(flag||player1!=null)){
+					
 					BoardPanel.this.board.makeMove(player2.computeMove(BoardPanel.this.board));
+					}
 				else
 					if(player1==null)
 						currHumenPlayer=currHumenPlayer.opposite();

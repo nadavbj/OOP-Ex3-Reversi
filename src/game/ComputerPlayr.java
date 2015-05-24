@@ -8,13 +8,21 @@ import com.sun.org.apache.regexp.internal.recompile;
 public class ComputerPlayr {
 	private SquareState playerColor;
 	private int level;
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
 	public ComputerPlayr(SquareState playerColor,int level) {
 		this.playerColor=playerColor;
 		this.level=level*2;
 	}
 
 	public Move computeMove(Board state){
-		return computeMove(state,playerColor,level);
+		return computeMove(state,playerColor,0);
 	}
 	
 	private Move computeMove(Board state,SquareState player,int level) {
