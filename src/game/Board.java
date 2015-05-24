@@ -13,29 +13,31 @@ public class Board implements Serializable{
 				if(i==0||i==boardState.length-1||j==0||j==boardState[0].length-1)
 					boardState[i][j]=SquareState.securityWall;
 				else
-					boardState[i][j]=SquareState.blank;
+					boardState[i][j]=SquareState.empty;
 			}
 		}
+		boardState[boardState.length/2-1][boardState[0].length/2-1]=SquareState.white;
+		boardState[boardState.length/2][boardState[0].length/2-1]=SquareState.black;
+		boardState[boardState.length/2-1][boardState[0].length/2]=SquareState.black;
 		boardState[boardState.length/2][boardState[0].length/2]=SquareState.white;
-		boardState[boardState.length/2+1][boardState[0].length/2]=SquareState.black;
-		boardState[boardState.length/2][boardState[0].length/2+1]=SquareState.black;
-		boardState[boardState.length/2+1][boardState[0].length/2+1]=SquareState.white;
 
 	}
 
 	public boolean makeMove(Move m){
 		//check the move
-		if(boardState[m.getOriginX()][m.getOriginY()]==SquareState.blank||
+		if(boardState[m.getOriginX()][m.getOriginY()]==SquareState.empty||
 				boardState[m.getOriginX()][m.getOriginY()]==SquareState.securityWall||
-				boardState[m.getDestinationX()][m.getDestinationY()]!=SquareState.blank)
+				boardState[m.getDestinationX()][m.getDestinationY()]!=SquareState.empty)
 			return false;
 		int dir=m.dir(),length=m.length();
-		for (int i = 1; i < length; i++) {
-			if(boardState[m.getOriginX()+i*Move.DIRECTIONS_MAT[dir][0]][m.getOriginY()+i*Move.DIRECTIONS_MAT[dir][0]]!=boardState[m.getOriginX()][m.getOriginY()].opposite())
+		
+		
+		for (int i = 1; i < length-1; i++) {
+			if(boardState[m.getOriginX()+i*Move.DIRECTIONS_MAT[dir][0]][m.getOriginY()+i*Move.DIRECTIONS_MAT[dir][1]]!=boardState[m.getOriginX()][m.getOriginY()].opposite())
 				return false;
 		}
 		for (int i = 1; i < length; i++) {
-			boardState[m.getOriginX()+i*Move.DIRECTIONS_MAT[dir][0]][m.getOriginY()+i*Move.DIRECTIONS_MAT[dir][0]]=boardState[m.getOriginX()][m.getOriginY()];
+			boardState[m.getOriginX()+i*Move.DIRECTIONS_MAT[dir][0]][m.getOriginY()+i*Move.DIRECTIONS_MAT[dir][1]]=boardState[m.getOriginX()][m.getOriginY()];
 		}
 		return true;
 	}
@@ -53,7 +55,7 @@ public class Board implements Serializable{
 	public Vector<Move> allPosibleMovesForSquare(int x,int y){
 		Vector<Move> result=new Vector<Move>();
 
-		if(boardState[x][y]==SquareState.blank||boardState[x][y]==SquareState.securityWall)
+		if(boardState[x][y]==SquareState.empty||boardState[x][y]==SquareState.securityWall)
 			return result;
 
 
@@ -66,7 +68,7 @@ public class Board implements Serializable{
 				desX+=Move.DIRECTIONS_MAT[i][0];
 				desY+=Move.DIRECTIONS_MAT[i][1];
 			}
-			if(lengh>1 && boardState[desX][desY]==SquareState.blank)
+			if(lengh>1 && boardState[desX][desY]==SquareState.empty)
 				result.add(new Move(x, y, desX, desY));
 		}
 		return result;
@@ -74,7 +76,7 @@ public class Board implements Serializable{
 	public SquareState win(){
 
 		if(allPosibleMoves(SquareState.white).size()>0&&allPosibleMoves(SquareState.black).size()>0)
-			return SquareState.blank;
+			return SquareState.empty;
 		int white=0,black=0;
 		for (int i = 0; i < boardState.length; i++) {
 			for (int j = 0; j < boardState[0].length; j++) {

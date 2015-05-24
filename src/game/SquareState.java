@@ -1,7 +1,7 @@
 package game;
 
 public enum SquareState {
-	blank,white,black,securityWall;
+	empty,white,black,securityWall;
 	public SquareState opposite(){
 		if(this==black)
 			return white;
